@@ -1,40 +1,28 @@
-// pages/api/fetch-movies.ts
-import { NextApiRequest, NextApiResponse } from "next";
-import { MoviesProps } from "@/interfaces";
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === 'POST') {
+export default async function handler(req, res) {
+  if (req.method === "POST") {
     try {
-      const { year, page, genre } = req.body;
-      const apiUrl = new URL('https://moviesdatabase.p.rapidapi.com/titles');
-      
-      apiUrl.searchParams.set('sort', 'year.decr');
-      apiUrl.searchParams.set('limit', '12');
-      apiUrl.searchParams.set('page', page.toString());
-      if (year) apiUrl.searchParams.set('year', year.toString());
-      if (genre) apiUrl.searchParams.set('genre', genre);
+      const API_URL = process.env.NEXT_PUBLIC_OMDB_API_URL;
+      const API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY;
 
-      const response = await fetch(apiUrl.toString(), {
-        headers: {
-          'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com',
-          'X-RapidAPI-Key': process.env.MOVIE_API_KEY!,
-        },
-      });
+      if (!API_URL || !API_KEY) {
+        throw new Error("Missing API URL or API Key.");
+      }
 
-      if (!response.ok) throw new Error('API request failed');
-      
+      const response = await fetch(`${API_URL}/?s=batman&apikey=${API_KEY}`);
+
+      if (!response.ok) {
+        console.error("API Error:", response.status, response.statusText);
+        throw new Error("API request failed");
+      }
+
       const data = await response.json();
-      const movies: MoviesProps[] = data.results;
-
-      res.status(200).json({ movies });
+      res.status(200).json(data);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch movies' });
+      console.error("Fetch error:", error.message);
+      res.status(500).json({ error: "Failed to fetch movies" });
     }
   } else {
-    res.setHeader('Allow', ['POST']);
+    res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

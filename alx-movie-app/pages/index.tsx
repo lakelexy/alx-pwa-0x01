@@ -10,7 +10,8 @@ const Home: React.FC = () => {
       <section
         className="h-screen bg-cover bg-center"
         style={{
-          backgroundImage: 'url("https://themebeyond.com/html/movflx/img/bg/breadcrumb_bg.jpg")',
+          backgroundImage:
+            'url("https://themebeyond.com/html/movflx/img/bg/breadcrumb_bg.jpg")',
         }}
       >
         <div className="bg-black bg-opacity-50 h-full flex flex-col justify-center items-center text-center">
@@ -22,10 +23,7 @@ const Home: React.FC = () => {
             Explore the latest blockbuster movies, critically acclaimed films,
             and your personal favorites – all in one place.
           </p>
-          <Button
-            title="Browse Movies"
-            action={() => router.push("/movies")}
-          />
+          <Button action={() => router.push("/movies")}>Browse Movies</Button>
         </div>
       </section>
 
@@ -37,7 +35,7 @@ const Home: React.FC = () => {
           Sign up today to get access to the latest movies, exclusive content,
           and personalized movie recommendations.
         </p>
-        <Button title="Get Started" />
+        <Button>Get Started</Button>
       </section>
     </div>
   );
